@@ -3,3 +3,14 @@ base="light"
 primaryColor="#8ac447"
 secondaryBackgroundColor="#f0f2f6"
 textColor="#262730"
+
+[browser]
+gatherUsageStats = false
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
+
+[server]
+enableXsrfProtection = true
+enableCORS = false
