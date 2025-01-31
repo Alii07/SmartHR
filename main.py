@@ -5,6 +5,23 @@ st.set_page_config(
     page_icon = "./logo.svg",
 )
 
+# Force le thème clair et désactive le sélecteur de thème
+st.markdown("""
+    <style>
+        .stApp {
+            background-color: #FFFFFF;
+        }
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        [data-testid="stToolbar"] {
+            display: none;
+        }
+        [data-testid="baseButton-header"] {
+            display: none;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Autres imports
 from streamlit_extras.bottom_container import bottom
 import pandas as pd
@@ -537,7 +554,7 @@ def main():
     else:
         import base64
         def get_image_as_base64(image_path):
-            with open(image_path, "rb") as img_file:
+            with open(image_path, "rb") as img_file):
                 return base64.b64encode(img_file.read()).decode()
 
         #logo_base64 = get_image_as_base64("./logo.svg")
