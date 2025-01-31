@@ -5,23 +5,6 @@ st.set_page_config(
     page_icon = "./logo.svg",
 )
 
-# Force le thème clair et désactive le sélecteur de thème
-st.markdown("""
-    <style>
-        .stApp {
-            background-color: #FFFFFF;
-        }
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        [data-testid="stToolbar"] {
-            display: none;
-        }
-        [data-testid="baseButton-header"] {
-            display: none;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # Autres imports
 from streamlit_extras.bottom_container import bottom
 import pandas as pd
