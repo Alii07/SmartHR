@@ -554,7 +554,7 @@ def main():
     else:
         import base64
         def get_image_as_base64(image_path):
-            with open(image_path, "rb") as img_file):
+            with open(image_path, "rb") as img_file:
                 return base64.b64encode(img_file.read()).decode()
 
         #logo_base64 = get_image_as_base64("./logo.svg")
