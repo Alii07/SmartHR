@@ -14,3 +14,8 @@ toolbarMode = "minimal"
 [server]
 enableXsrfProtection = true
 enableCORS = false
+
+[global]
+developmentMode = false
+showFooter = false
+disableWatchdogWarning = true
