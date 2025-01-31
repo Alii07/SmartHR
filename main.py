@@ -8,6 +8,7 @@ st.set_page_config(
 
 hide_streamlit_style = """
     <style>
+    #appCreatorAvatar {visibility: hidden;}
     ._profileImage_gzau3_78 _lightThemeShadow_gzau3_95{display: none;}
     #MainMenu {visibility: hidden;}
     footer {display: none;}
