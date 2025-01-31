@@ -1,4 +1,5 @@
 numpy
+streamlit_extras
 streamlit
 altair
 matplotlib
