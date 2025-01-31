@@ -449,7 +449,7 @@ def main():
     if "menu" not in st.session_state:
         st.session_state["menu"] = "intro"
 
-    st.logo("./logo.png", icon_image="./logo.png")
+    st.logo("./Logo.png", icon_image="./Logo.png")
     st.sidebar.markdown(
         """
         <style>
