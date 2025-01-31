@@ -3,13 +3,7 @@ import streamlit as st
 st.set_page_config(
     page_title = "SMARTHR",
     page_icon = "./logo.svg",
-    initial_sidebar_state = "expanded",
-    theme = {
-        "base": "light",
-        "primaryColor": "#8ac447",
-        "secondaryBackgroundColor": "#f0f2f6",
-        "textColor": "#262730",
-    }
+    initial_sidebar_state = "expanded"
 )
 
 # Autres imports
