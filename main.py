@@ -6,6 +6,15 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display: none;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Autres imports
 from streamlit_extras.bottom_container import bottom
 import pandas as pd
