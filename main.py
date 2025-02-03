@@ -1,5 +1,8 @@
 # Configuration de la page - DOIT ÊTRE LA PREMIÈRE COMMANDE STREAMLIT
 import streamlit as st
+import hashlib
+import sqlite3
+
 st.set_page_config(
     page_title = "SMARTHR",
     page_icon = "./logo.svg",
@@ -455,8 +458,125 @@ with bottom():
     
 
 
+def init_db():
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS users
+                 (username TEXT PRIMARY KEY, password TEXT)''')
+    
+    # Ajout d'un utilisateur par défaut
+    default_username = "HCM-admin"
+    default_password = "HCM2025"
+    hashed_password = hash_password(default_password)
+    
+    try:
+        c.execute("INSERT OR IGNORE INTO users VALUES (?, ?)", 
+                 (default_username, hashed_password))
+        conn.commit()
+    except sqlite3.IntegrityError:
+        pass
+    finally:
+        conn.close()
+
+def hash_password(password):
+    return hashlib.sha256(str.encode(password)).hexdigest()
+
+def add_user(username, password):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    hashed_password = hash_password(password)
+    try:
+        c.execute("INSERT INTO users VALUES (?, ?)", (username, hashed_password))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+    finally:
+        conn.close()
+
+def login_user(username, password):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    hashed_password = hash_password(password)
+    c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, hashed_password))
+    result = c.fetchone()
+    conn.close()
+    return result is not None
+
+def login_interface():
+    st.markdown(
+        """
+        <style>
+        .auth-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            max-width: 400px;
+        }
+        .auth-title {
+            color: #386161;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-subtitle {
+            color: #666666;
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 2rem;
+        }
+        .auth-input {
+            margin-bottom: 1rem;
+        }
+        .auth-button {
+            background-color: #8ac447;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<h1 class='auth-title'>SMARTHR - Authentification</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='auth-subtitle'>Veuillez vous connecter pour accéder à l'application</p>", unsafe_allow_html=True)
+
+    with st.container():
+        col1, col2, col3 = st.columns([1,2,1])
+        with col2:
+            with st.form("login_form"):
+                username = st.text_input("Nom d'utilisateur")
+                password = st.text_input("Mot de passe", type="password")
+                submit = st.form_submit_button("Se connecter")
+
+                if submit:
+                    if login_user(username, password):
+                        st.session_state['authenticated'] = True
+                        st.session_state['username'] = username
+                        st.success("Connexion réussie!")
+                        st.rerun()
+                    else:
+                        st.error("Nom d'utilisateur ou mot de passe incorrect")
+
+
 def main():
-    # Initialisation de l'état du menu
+    # Initialisation de la base de données
+    init_db()
+
+    # Vérification de l'authentification
+    if 'authenticated' not in st.session_state:
+        st.session_state['authenticated'] = False
+
+    if not st.session_state['authenticated']:
+        login_interface()
+        return
+
+    # Le reste du code main existant
     if "menu" not in st.session_state:
         st.session_state["menu"] = "intro"
 
@@ -509,7 +629,7 @@ def main():
         st.session_state["menu"] = "Extraction des données"
         st.rerun()
 
-    if st.sidebar.button("Modification cotisation employée", key="sidebar_modification"):
+    if st.sidebar.button("Modification employé", key="sidebar_modification"):
         st.session_state["menu"] = "Modification cotisation employée"
         st.rerun()
 
@@ -1188,6 +1308,12 @@ def main():
                 </div>
             </div>
         """, unsafe_allow_html=True)
+
+    # Ajout du bouton de déconnexion
+    if st.sidebar.button("📤 Déconnexion"):
+        st.session_state['authenticated'] = False
+        st.session_state['username'] = None
+        st.rerun()
 
 if __name__ == "__main__":
     main()
